@@ -42,6 +42,8 @@ def get_file_path(folders,file_kind):#フォルダパスを入れる,取得し�
     print(all_file_list)
 #対象のフォルダの中のfile_kindの種類のファイルパスをall_file_listに入れていく
 
+
+
 tg_folder = get_folders_path('/Users/nagaokashuuhei/Desktop/R4_data/R*.*')
 get_file_path(tg_folder,'*.csv')
 
