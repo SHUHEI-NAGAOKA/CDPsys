@@ -27,23 +27,24 @@ from monthdelta import monthmod
 #     folder_n += 1
 all_file_list = []
 dob_data_list = []
+after_processing_list = []
 
 def get_folders_path(target_dir):
     folders_path = glob.glob(target_dir)
     return folders_path
 #対象のフォルダの中のフォルダのパスを取得、リストに入れる
 
-def get_file_path(folders,file_kind):#フォルダパスを入れる,取得したいフォルダの種類をワイルドカード形式で入れる
+def get_file_path(folders,file_kind,after_pro_list):#フォルダパスを入れる,取得したいフォルダの種類をワイルドカード形式で入れる
     for folder in folders:
         os.chdir(folder)
         files = glob.glob(file_kind)
         for file in files:
             all_file_list.append(folder+'/'+file)
         os.chdir('../')
-    print(all_file_list)
+    return after_pro_list
 #対象のフォルダの中のfile_kindの種類のファイルパスをall_file_listに入れていく
 
-def dob_list_gen(file_list,ter_dir):
+def dob_list_gen(file_list,ter_dir,dob_list):
     os.chdir(ter_dir)
     for file in file_list:
         with open(file, 'r', encoding= 'cp932') as f:
@@ -51,14 +52,25 @@ def dob_list_gen(file_list,ter_dir):
             row = list(data)
             del row[0]
             for dob_data in row:
-                dob_data_list.append(dob_data[4])
-    print(dob_data_list)
+                dob_list.append(dob_data[4])
+    return dob_list
+
+def adjust_dob(dob_list,after_list):
+    for dob in dob_list:
+        before_dob = list(dob)
+        before_dob.insert(4,'/')
+        before_dob.insert(7,'/')
+        before_dob = ''.join(before_dob)
+        after_list.append(before_dob)
+    return after_list
+
 
 
 
 tg_folder = get_folders_path('/Users/nagaokashuuhei/Desktop/R4_data/R*.*')
-data =  get_file_path(tg_folder,'*.csv')
-dob_list_gen(all_file_list,'/Users/nagaokashuuhei/Desktop/R4_data')
+data =  get_file_path(tg_folder,'*.csv',all_file_list)
+dob_list_gen(all_file_list,'/Users/nagaokashuuhei/Desktop/R4_data',dob_data_list)
+print(adjust_dob(dob_data_list,after_processing_list))
 
 
 
